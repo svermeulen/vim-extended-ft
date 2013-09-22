@@ -50,15 +50,23 @@ function! s:Search(count, char, dir, type)
 endfunction
 
 function! s:RunSearch(count, searchStr, dir, type)
+
+    let searchStr = a:searchStr
+
     if !exists('g:ExtendedFT_caseOption')
-        let caseOption = (a:searchStr =~# '\v\u') ? '\C' : '\c'
+        let caseOption = (searchStr =~# '\v\u') ? '\C' : '\c'
     else
         let caseOption = g:ExtendedFT_caseOption
     endif
 
     let options = (a:dir ==# 'f') ? 'W' : 'Wb'
 
-    let pattern = caseOption . a:searchStr
+    " Apply smart case to key '-'
+    if searchStr ==# '-'
+        let searchStr = '\(-\|_\)'
+    endif
+
+    let pattern = caseOption . searchStr
 
     if a:type ==# 't'
         if a:dir ==# 'f'
