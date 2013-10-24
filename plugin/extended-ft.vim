@@ -73,6 +73,47 @@ function! s:Search(count, char, dir, type)
 
 endfunction
 
+function! s:ApplySmartCaseToOtherCharacters(searchStr)
+
+    let searchStr = a:searchStr
+    " Apply smart case to key '-'
+    if searchStr ==# '-'
+        let searchStr = '\(-\|_\)'
+
+    elseif searchStr ==# '/'
+        let searchStr = '\(\/\|?\)'
+
+    elseif searchStr ==# '.'
+        let searchStr = '\(.\|>\)'
+
+    elseif searchStr ==# ','
+        let searchStr = '\(,\|<\)'
+
+    elseif searchStr ==# ';'
+        let searchStr = '\(;\|:\)'
+
+    elseif searchStr ==# "'"
+        let searchStr = '\(''\|"\)'
+
+    elseif searchStr ==# '['
+        let searchStr = '\([\|{\)'
+
+    elseif searchStr ==# ']'
+        let searchStr = '\(]\|}\)'
+
+    elseif searchStr ==# '\'
+        let searchStr = '\(\\\||\)'
+
+    elseif searchStr ==# '='
+        let searchStr = '\(=\|+\)'
+
+    elseif searchStr ==# '`'
+        let searchStr = '\(`\|~\)'
+    endif
+
+    return searchStr
+endfunction
+
 function! s:RunSearch(count, searchStr, dir, type)
 
     let searchStr = a:searchStr
@@ -83,12 +124,11 @@ function! s:RunSearch(count, searchStr, dir, type)
         let caseOption = g:ExtendedFT_caseOption
     endif
 
-    let options = (a:dir ==# 'f') ? 'W' : 'Wb'
-
-    " Apply smart case to key '-'
-    if searchStr ==# '-'
-        let searchStr = '\(-\|_\)'
+    if get(g:, 'ExtendedFT_smartCaseAll', 0)
+        let searchStr = s:ApplySmartCaseToOtherCharacters(searchStr)
     endif
+
+    let options = (a:dir ==# 'f') ? 'W' : 'Wb'
 
     let pattern = caseOption . searchStr
 
@@ -118,7 +158,7 @@ function! s:RunSearch(count, searchStr, dir, type)
     call s:RemoveHighlight()
     call s:AttachAutoCommands()
 
-    let matchQuery = pattern
+    let matchQuery = '\V' . pattern
 
     if len(a:searchStr) == 1
         let currentLine = line('.')
