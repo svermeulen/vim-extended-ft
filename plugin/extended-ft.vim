@@ -83,15 +83,6 @@ function! s:ApplySmartCaseToOtherCharacters(searchStr)
     elseif searchStr ==# '/'
         let searchStr = '\(\/\|?\)'
 
-    elseif searchStr ==# '.'
-        let searchStr = '\(.\|>\)'
-
-    elseif searchStr ==# ','
-        let searchStr = '\(,\|<\)'
-
-    elseif searchStr ==# ';'
-        let searchStr = '\(;\|:\)'
-
     elseif searchStr ==# "'"
         let searchStr = '\(''\|"\)'
 
