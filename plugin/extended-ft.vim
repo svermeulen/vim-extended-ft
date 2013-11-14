@@ -39,9 +39,19 @@ let s:lastSearchType = 'f'
 
 " Functions
 function! s:InputChar()
-    let char = nr2char(getchar())
+    let charNr = getchar()
 
-    if char ==# ''
+    if charNr ==# '€F7'
+        return '('
+    endif
+
+    if charNr ==# '€F8'
+        return ')'
+    endif
+
+    let char = nr2char(charNr)
+
+    if char == ''
         return ''
     endif
 
