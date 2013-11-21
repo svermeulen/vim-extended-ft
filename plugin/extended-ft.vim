@@ -60,7 +60,7 @@ endfunction
 
 function! s:RemoveHighlight()
     silent! call matchdelete(w:highlightId)
-endf
+endfunction
 
 function! s:AttachAutoCommands()
     augroup ExtendedFtHighlight
@@ -68,7 +68,7 @@ function! s:AttachAutoCommands()
         autocmd InsertEnter,WinLeave,BufLeave <buffer> call <sid>RemoveHighlight() | autocmd! ExtendedFtHighlight * <buffer>
         autocmd CursorMoved <buffer> autocmd ExtendedFtHighlight CursorMoved <buffer> call <sid>RemoveHighlight() | autocmd! ExtendedFtHighlight * <buffer>
     augroup END
-endf
+endfunction
 
 function! s:Search(count, char, dir, type)
 
