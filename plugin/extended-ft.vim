@@ -1,8 +1,19 @@
 
-" Plugs
+"""""""""""""""""""""""
+" Variables
+"""""""""""""""""""""""
+let s:lastSearch = ''
+let s:lastSearchType = 'f'
 
+"""""""""""""""""""""""
+" Plugs
+"""""""""""""""""""""""
 nnoremap <plug>ExtendedFtRepeatSearchForward :<c-u>call <sid>RepeatSearchForward(v:count, 'n')<cr>
 nnoremap <plug>ExtendedFtRepeatSearchBackward :<c-u>call <sid>RepeatSearchBackward(v:count)<cr>
+
+nnoremap <plug>ExtendedFtRepeatSearchCenterForward :<c-u>call <sid>RepeatSearchForward(v:count, 'n')<cr>zz
+nnoremap <plug>ExtendedFtRepeatSearchCenterBackward :<c-u>call <sid>RepeatSearchBackward(v:count)<cr>zz
+
 nnoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "f")<cr>'
 nnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "f")<cr>'
 nnoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "t")<cr>'
@@ -10,6 +21,7 @@ nnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':<c-u>call <sid>Search
 
 xnoremap <expr> <plug>ExtendedFtVisualModeRepeatSearchForward '<esc>:<c-u>call <sid>RepeatSearchForward('. v:count . ', "x")<cr>m>gv'
 xnoremap <expr> <plug>ExtendedFtVisualModeRepeatSearchBackward '<esc>:<c-u>call <sid>RepeatSearchBackward('. v:count . ')<cr>m>gv'
+
 xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f")<cr>m>gv'
 xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f")<cr>m>gv'
 xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "t")<cr>m>gv'
@@ -17,6 +29,7 @@ xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTBackward ':<c-u>call <
 
 onoremap <plug>ExtendedFtOperationModeRepeatSearchForward :call <sid>RepeatSearchForward(v:count, 'o')<cr>
 onoremap <plug>ExtendedFtOperationModeRepeatSearchBackward :call <sid>RepeatSearchBackward(v:count)<cr>
+
 onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "p")<cr>'
 onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f")<cr>'
 onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchTForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f")<cr>'
@@ -32,12 +45,44 @@ xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchSBackward ':<c-u>call <
 onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "p")<cr>'
 onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f")<cr>'
 
-" Variables
-let s:lastSearch = ''
-let s:lastSearchDir = 'f'
-let s:lastSearchType = 'f'
+"""""""""""""""""""""""
+" Mappings
+"""""""""""""""""""""""
+if !exists('g:ExtendedFTUseDefaults') || g:ExtendedFTUseDefaults
+    nmap <silent> ; <plug>ExtendedFtRepeatSearchForward
+    nmap <silent> , <plug>ExtendedFtRepeatSearchBackward
+    nmap <silent> f <plug>ExtendedFtSearchFForward
+    nmap <silent> F <plug>ExtendedFtSearchFBackward
+    nmap <silent> t <plug>ExtendedFtSearchTForward
+    nmap <silent> T <plug>ExtendedFtSearchTBackward
 
+    xmap <silent> ; <plug>ExtendedFtVisualModeRepeatSearchForward
+    xmap <silent> , <plug>ExtendedFtVisualModeRepeatSearchBackward
+    xmap <silent> f <plug>ExtendedFtVisualModeSearchFForward
+    xmap <silent> F <plug>ExtendedFtVisualModeSearchFBackward
+    xmap <silent> t <plug>ExtendedFtVisualModeSearchTForward
+    xmap <silent> T <plug>ExtendedFtVisualModeSearchTBackward
+
+    omap <silent> ; <plug>ExtendedFtOperationModeRepeatSearchForward
+    omap <silent> , <plug>ExtendedFtOperationModeRepeatSearchBackward
+    omap <silent> f <plug>ExtendedFtOperationModeSearchFForward
+    omap <silent> F <plug>ExtendedFtOperationModeSearchFBackward
+    omap <silent> t <plug>ExtendedFtOperationModeSearchTForward
+    omap <silent> T <plug>ExtendedFtOperationModeSearchTBackward
+
+    " Uncomment or copy/paste to your own vimrc to use seek operator
+    "nmap <silent> s <plug>ExtendedFtSearchSForward
+    "xmap <silent> s <plug>ExtendedFtVisualModeSearchSForward
+    "omap <silent> s <plug>ExtendedFtOperationModeSearchSForward
+
+    "nmap <silent> S <plug>ExtendedFtSearchSBackward
+    "xmap <silent> S <plug>ExtendedFtVisualModeSearchSBackward
+    "omap <silent> S <plug>ExtendedFtOperationModeSearchSBackward
+endif
+
+"""""""""""""""""""""""
 " Functions
+"""""""""""""""""""""""
 function! s:InputChar()
     let charNr = getchar()
 
@@ -78,7 +123,6 @@ function! s:Search(count, char, dir, type)
 
     call s:RunSearch(a:count, a:char, a:dir, a:type)
     let s:lastSearch = a:char
-    let s:lastSearchDir = a:dir
     let s:lastSearchType = a:type
 
 endfunction
@@ -163,19 +207,22 @@ function! s:RunSearch(count, searchStr, dir, type)
 
     if len(a:searchStr) == 1
         let currentLine = line('.')
-        let matchQuery = matchQuery .'\%'.currentLine.'l'
+        " Only show the matches in the above and below lines
+        let matchQuery = matchQuery .'\%>' . (currentLine-2) . 'l\%<' . (currentLine + 2) . 'l'
+        echom matchQuery
     endif
 
     let w:highlightId = matchadd('Search', matchQuery, 2, get(w:, 'highlightId', -1))
+    let g:fullSearch = 0
 endfunction
 
 function! s:RepeatSearchForward(count, mode)
     if empty(s:lastSearch)
         echo 'Nothing to repeat'
     else
-        call s:RunSearch(a:count, s:lastSearch, s:lastSearchDir, s:lastSearchType)
+        call s:RunSearch(a:count, s:lastSearch, 'f', s:lastSearchType)
 
-        if a:mode ==# 'o' && s:lastSearchDir ==# 'f'
+        if a:mode ==# 'o'
             " Not 100% sure why this is necessary in this case but it is
             normal! l
         endif
@@ -186,38 +233,6 @@ function! s:RepeatSearchBackward(count)
     if empty(s:lastSearch)
         echo 'Nothing to repeat'
     else
-        call s:RunSearch(a:count, s:lastSearch, (s:lastSearchDir == 'f') ? 'b' : 'f', s:lastSearchType)
+        call s:RunSearch(a:count, s:lastSearch, 'b', s:lastSearchType)
     endif
 endfunction
-
-if !exists('g:ExtendedFTUseDefaults') || g:ExtendedFTUseDefaults
-    nmap <silent> ; <plug>ExtendedFtRepeatSearchForward
-    nmap <silent> , <plug>ExtendedFtRepeatSearchBackward
-    nmap <silent> f <plug>ExtendedFtSearchFForward
-    nmap <silent> F <plug>ExtendedFtSearchFBackward
-    nmap <silent> t <plug>ExtendedFtSearchTForward
-    nmap <silent> T <plug>ExtendedFtSearchTBackward
-
-    xmap <silent> ; <plug>ExtendedFtVisualModeRepeatSearchForward
-    xmap <silent> , <plug>ExtendedFtVisualModeRepeatSearchBackward
-    xmap <silent> f <plug>ExtendedFtVisualModeSearchFForward
-    xmap <silent> F <plug>ExtendedFtVisualModeSearchFBackward
-    xmap <silent> t <plug>ExtendedFtVisualModeSearchTForward
-    xmap <silent> T <plug>ExtendedFtVisualModeSearchTBackward
-
-    omap <silent> ; <plug>ExtendedFtOperationModeRepeatSearchForward
-    omap <silent> , <plug>ExtendedFtOperationModeRepeatSearchBackward
-    omap <silent> f <plug>ExtendedFtOperationModeSearchFForward
-    omap <silent> F <plug>ExtendedFtOperationModeSearchFBackward
-    omap <silent> t <plug>ExtendedFtOperationModeSearchTForward
-    omap <silent> T <plug>ExtendedFtOperationModeSearchTBackward
-
-    " Uncomment or copy/paste to your own vimrc to use seek operator
-    "nmap <silent> s <plug>ExtendedFtSearchSForward
-    "xmap <silent> s <plug>ExtendedFtVisualModeSearchSForward
-    "omap <silent> s <plug>ExtendedFtOperationModeSearchSForward
-
-    "nmap <silent> S <plug>ExtendedFtSearchSBackward
-    "xmap <silent> S <plug>ExtendedFtVisualModeSearchSBackward
-    "omap <silent> S <plug>ExtendedFtOperationModeSearchSBackward
-endif
