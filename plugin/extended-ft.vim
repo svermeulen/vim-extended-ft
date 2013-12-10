@@ -8,6 +8,9 @@ let s:lastSearchType = 'f'
 """""""""""""""""""""""
 " Plugs
 """""""""""""""""""""""
+
+nnoremap <plug>ExtendedFtForceEnableHighlight :call <sid>EnableHighlight()<cr>
+
 nnoremap <plug>ExtendedFtRepeatSearchForward :<c-u>call <sid>RepeatSearchForward(v:count, 'n')<cr>
 nnoremap <plug>ExtendedFtRepeatSearchBackward :<c-u>call <sid>RepeatSearchBackward(v:count)<cr>
 
@@ -159,7 +162,7 @@ function! s:ApplySmartCaseToOtherCharacters(searchStr)
     return searchStr
 endfunction
 
-function! s:RunSearch(count, searchStr, dir, type)
+function! s:CreatePatternForInput(searchStr, type)
 
     let searchStr = a:searchStr
 
@@ -173,8 +176,6 @@ function! s:RunSearch(count, searchStr, dir, type)
         let searchStr = s:ApplySmartCaseToOtherCharacters(searchStr)
     endif
 
-    let options = (a:dir ==# 'f') ? 'W' : 'Wb'
-
     let pattern = caseOption . searchStr
 
     if a:type ==# 't'
@@ -187,33 +188,55 @@ function! s:RunSearch(count, searchStr, dir, type)
         let pattern = pattern . '\zs'
     endif
 
+    return pattern
+endfunction
+
+function! s:RunSearch(count, searchStr, dir, type)
+
+    let pattern = s:CreatePatternForInput(a:searchStr, a:type)
+    call s:MoveCursor(a:count, a:dir, pattern)
+    call s:EnableHighlight(pattern)
+
+    let g:fullSearch = 0
+endfunction
+
+function! s:MoveCursor(count, dir, pattern)
+
     let cnt = a:count > 0 ? a:count : 1
 
+    let options = (a:dir ==# 'f') ? 'W' : 'Wb'
+
     for i in range(cnt)
-        let lineNo = search('\V' . pattern, options . 'n')
+        let lineNo = search('\V' . a:pattern, options . 'n')
 
         " Only add to jumplist if we're changing line
         if lineNo != line(".")
             normal! m`
         endif
 
-        call search('\V' . pattern, options)
+        call search('\V' . a:pattern, options)
     endfor
+endfunction
+
+function! s:EnableHighlight(...)
+
+    if a:0
+        let pattern = a:1
+    else
+
+        let pattern = s:CreatePatternForInput(s:lastSearch, s:lastSearchType)
+    endif
 
     call s:RemoveHighlight()
     call s:AttachAutoCommands()
 
     let matchQuery = '\V' . pattern
 
-    if len(a:searchStr) == 1
-        let currentLine = line('.')
-        " Only show the matches in the above and below lines
-        let matchQuery = matchQuery .'\%>' . (currentLine-2) . 'l\%<' . (currentLine + 2) . 'l'
-        echom matchQuery
-    endif
+    let currentLine = line('.')
+    " Only show the matches in the above and below lines
+    let matchQuery = matchQuery .'\%>' . (currentLine-2) . 'l\%<' . (currentLine + 2) . 'l'
 
     let w:highlightId = matchadd('Search', matchQuery, 2, get(w:, 'highlightId', -1))
-    let g:fullSearch = 0
 endfunction
 
 function! s:RepeatSearchForward(count, mode)
