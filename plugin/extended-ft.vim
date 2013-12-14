@@ -87,6 +87,20 @@ endif
 """""""""""""""""""""""
 " Functions
 """""""""""""""""""""""
+
+function! s:ChangeToFullSearch()
+    let g:fullSearch = 1
+endfunction
+
+function! s:AttachSearchToggleAutoCommands()
+    augroup SearchTypeToggle
+        autocmd!
+        autocmd InsertEnter,WinLeave,BufLeave <buffer> call <sid>ChangeToFullSearch() | autocmd! SearchTypeToggle * <buffer>
+        "set up *nested* CursorMoved autocmd to skip the _first_ CursorMoved event.
+        autocmd CursorMoved <buffer> autocmd SearchTypeToggle CursorMoved <buffer> call <sid>ChangeToFullSearch() | autocmd! SearchTypeToggle * <buffer>
+    augroup END
+endfunction
+
 function! s:InputChar()
     let charNr = getchar()
 
@@ -200,6 +214,7 @@ function! s:RunSearch(count, searchStr, dir, type)
     call s:EnableHighlight(pattern)
 
     let g:fullSearch = 0
+    call s:AttachSearchToggleAutoCommands()
 endfunction
 
 function! s:MoveCursor(count, dir, pattern)
