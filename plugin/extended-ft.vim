@@ -4,6 +4,7 @@
 """""""""""""""""""""""
 let s:lastSearch = ''
 let s:lastSearchType = 'f'
+let s:lastSearchDir = 'f'
 
 """""""""""""""""""""""
 " Plugs
@@ -127,6 +128,7 @@ function! s:Search(count, char, dir, type)
     call s:RunSearch(a:count, a:char, a:dir, a:type)
     let s:lastSearch = a:char
     let s:lastSearchType = a:type
+    let s:lastSearchDir = a:dir
 
 endfunction
 
@@ -162,7 +164,7 @@ function! s:ApplySmartCaseToOtherCharacters(searchStr)
     return searchStr
 endfunction
 
-function! s:CreatePatternForInput(searchStr, type)
+function! s:CreatePatternForInput(searchStr, type, dir)
 
     let searchStr = a:searchStr
 
@@ -193,7 +195,7 @@ endfunction
 
 function! s:RunSearch(count, searchStr, dir, type)
 
-    let pattern = s:CreatePatternForInput(a:searchStr, a:type)
+    let pattern = s:CreatePatternForInput(a:searchStr, a:type, a:dir)
     call s:MoveCursor(a:count, a:dir, pattern)
     call s:EnableHighlight(pattern)
 
@@ -223,8 +225,7 @@ function! s:EnableHighlight(...)
     if a:0
         let pattern = a:1
     else
-
-        let pattern = s:CreatePatternForInput(s:lastSearch, s:lastSearchType)
+        let pattern = s:CreatePatternForInput(s:lastSearch, s:lastSearchType, s:lastSearchDir)
     endif
 
     call s:RemoveHighlight()
@@ -234,7 +235,7 @@ function! s:EnableHighlight(...)
 
     let currentLine = line('.')
     " Only show the matches in the above and below lines
-    let matchQuery = matchQuery .'\%>' . (currentLine-2) . 'l\%<' . (currentLine + 2) . 'l'
+    let matchQuery = matchQuery .'\%>' . max([0, currentLine-2]) . 'l\%<' . (currentLine + 2) . 'l'
 
     let w:highlightId = matchadd('Search', matchQuery, 2, get(w:, 'highlightId', -1))
 endfunction
