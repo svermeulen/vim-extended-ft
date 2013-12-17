@@ -149,30 +149,10 @@ endfunction
 function! s:ApplySmartCaseToOtherCharacters(searchStr)
 
     let searchStr = a:searchStr
+
     " Apply smart case to key '-'
     if searchStr ==# '-'
         let searchStr = '\(-\|_\)'
-
-    elseif searchStr ==# '/'
-        let searchStr = '\(\/\|?\)'
-
-    elseif searchStr ==# "'"
-        let searchStr = '\(''\|"\)'
-
-    elseif searchStr ==# '['
-        let searchStr = '\([\|{\)'
-
-    elseif searchStr ==# ']'
-        let searchStr = '\(]\|}\)'
-
-    elseif searchStr ==# '\'
-        let searchStr = '\(\\\||\)'
-
-    elseif searchStr ==# '='
-        let searchStr = '\(=\|+\)'
-
-    elseif searchStr ==# '`'
-        let searchStr = '\(`\|~\)'
     endif
 
     return searchStr
