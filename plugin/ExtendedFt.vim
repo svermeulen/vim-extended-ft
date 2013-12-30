@@ -88,16 +88,12 @@ endif
 " Functions
 """""""""""""""""""""""
 
-function! s:ChangeToFullSearch()
-    let g:fullSearch = 1
-endfunction
-
 function! s:AttachSearchToggleAutoCommands()
     augroup SearchTypeToggle
         autocmd!
-        autocmd InsertEnter,WinLeave,BufLeave <buffer> call <sid>ChangeToFullSearch() | autocmd! SearchTypeToggle * <buffer>
+        autocmd InsertEnter,WinLeave,BufLeave <buffer> autocmd! SearchTypeToggle * <buffer>
         "set up *nested* CursorMoved autocmd to skip the _first_ CursorMoved event.
-        autocmd CursorMoved <buffer> autocmd SearchTypeToggle CursorMoved <buffer> call <sid>ChangeToFullSearch() | autocmd! SearchTypeToggle * <buffer>
+        autocmd CursorMoved <buffer> autocmd SearchTypeToggle CursorMoved <buffer> autocmd! SearchTypeToggle * <buffer>
     augroup END
 endfunction
 
@@ -122,7 +118,7 @@ function! s:InputChar()
 endfunction
 
 function! s:RemoveHighlight()
-    silent! call matchdelete(w:highlightId)
+    silent! call matchdelete(w:charHighlightId)
 endfunction
 
 function! s:AttachAutoCommands()
@@ -193,7 +189,6 @@ function! s:RunSearch(count, searchStr, dir, type)
     call s:MoveCursor(a:count, a:dir, pattern)
     call s:EnableHighlight(pattern)
 
-    let g:fullSearch = 0
     call s:AttachSearchToggleAutoCommands()
 endfunction
 
@@ -232,7 +227,7 @@ function! s:EnableHighlight(...)
     " Only show the matches in the above and below lines
     let matchQuery = matchQuery .'\%>' . max([0, currentLine-2]) . 'l\%<' . (currentLine + 2) . 'l'
 
-    let w:highlightId = matchadd('Search', matchQuery, 2, get(w:, 'highlightId', -1))
+    let w:charHighlightId = matchadd('Search', matchQuery, 2, get(w:, 'charHighlightId', -1))
 endfunction
 
 function! s:RepeatSearchForward(count, mode)
