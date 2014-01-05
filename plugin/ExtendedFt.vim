@@ -146,13 +146,13 @@ function! s:GetPatternFromInput(searchStr)
 
     let searchStr = a:searchStr
 
-    if searchStr =~# '\v[a-z]'
-        let searchStr = toupper(searchStr)
+    "if searchStr =~# '\v[a-z]'
+        "let searchStr = toupper(searchStr)
 
-    elseif searchStr =~# '\v[A-Z]'
-        let searchStr = tolower(searchStr)
+    "elseif searchStr =~# '\v[A-Z]'
+        "let searchStr = tolower(searchStr)
 
-    elseif searchStr ==# '-'
+    if searchStr ==# '-'
         " Apply smart case to key '-'
         let searchStr = '\(-\|_\)'
     endif
@@ -164,12 +164,12 @@ function! s:CreatePatternForInput(searchStr, type, dir)
 
     let searchStr = a:searchStr
 
-    let caseOption = '\C'
-    "if !exists('g:ExtendedFT_caseOption')
-        "let caseOption = (searchStr =~# '\v\u') ? '\C' : '\c'
-    "else
-        "let caseOption = g:ExtendedFT_caseOption
-    "endif
+    "let caseOption = '\C'
+    if !exists('g:ExtendedFT_caseOption')
+        let caseOption = (searchStr =~# '\v\u') ? '\C' : '\c'
+    else
+        let caseOption = g:ExtendedFT_caseOption
+    endif
 
     if get(g:, 'ExtendedFT_smartCaseAll', 0)
         let searchStr = s:GetPatternFromInput(searchStr)
