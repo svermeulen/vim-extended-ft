@@ -119,6 +119,7 @@ endfunction
 
 function! s:RemoveHighlight()
     silent! call matchdelete(w:charHighlightId)
+    let w:charHighlightId = -1
 endfunction
 
 function! s:AttachAutoCommands()
@@ -135,85 +136,80 @@ function! s:Search(count, char, dir, type)
         return
     endif
 
-    call s:RunSearch(a:count, a:char, a:dir, a:type)
     let s:lastSearch = a:char
     let s:lastSearchType = a:type
     let s:lastSearchDir = a:dir
 
+    call s:RunSearch(a:count, a:char, a:dir, a:type, 1)
+
 endfunction
 
-function! s:GetPatternFromInput(searchStr)
+function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
 
-    let searchStr = a:searchStr
+    let bolOrNonWordChar = '\(\W\|\^\)' 
+    let eolOrNonWordChar = '\(\W\|\$\)' 
 
-    if searchStr =~# '\v[a-z]'
-        let searchStr = toupper(searchStr)
-
-    elseif searchStr =~# '\v[A-Z]'
-        let searchStr = tolower(searchStr)
-
-    elseif searchStr ==# '-'
-        " Apply smart case to key '-'
-        let searchStr = '\(-\|_\)'
-    endif
-
-    return searchStr
-endfunction
-
-function! s:CreatePatternForInput(searchStr, type, dir)
-
-    let searchStr = a:searchStr
-
-    let caseOption = '\C'
-    "if !exists('g:ExtendedFT_caseOption')
-        "let caseOption = (searchStr =~# '\v\u') ? '\C' : '\c'
-    "else
-        "let caseOption = g:ExtendedFT_caseOption
-    "endif
-
-    if get(g:, 'ExtendedFT_smartCaseAll', 0)
-        let searchStr = s:GetPatternFromInput(searchStr)
-    endif
-
-    let pattern = caseOption . searchStr
-
-    if a:type ==# 't'
-        if a:dir ==# 'f'
-            let pattern = '\.' . pattern
+    if a:searchStr =~# '\v[a-z]'
+        if a:type == 'f'
+            return '\C\(' . bolOrNonWordChar . '\zs' . a:searchStr . '\|'. a:searchStr . '\ze' . eolOrNonWordChar . '\|' . toupper(a:searchStr) . '\)'
         else
-            let pattern = pattern . '\zs'
+            if a:dir == 'f'
+                if a:forHighlight
+                    return '\C\(\W\zs' . a:searchStr . '\|\.\zs'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(a:searchStr) . '\)'
+                else
+                    return '\C\(\W' . a:searchStr . '\|\.'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(a:searchStr) . '\)'
+                endif
+            else
+                if a:forHighlight
+                    return '\C\(' . bolOrNonWordChar . '\zs' . a:searchStr . '\|\.\zs'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(a:searchStr) . '\)'
+                else
+                    return '\C\(' . bolOrNonWordChar . a:searchStr . '\zs\|\.'. a:searchStr . '\zs' . eolOrNonWordChar . '\|\.' . toupper(a:searchStr) . '\zs\)'
+                endif
+            endif
         endif
-    elseif a:type ==# 'p'
-        let pattern = pattern . '\zs'
+
+    elseif a:searchStr =~# '\v[A-Z]'
+        return '\c' . tolower(a:searchStr)
+
+    elseif a:searchStr ==# '-'
+        " Apply smart case to key '-'
+        return '\(-\|_\)'
     endif
 
-    return pattern
+    return a:searchStr
 endfunction
 
-function! s:RunSearch(count, searchStr, dir, type)
+function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
 
-    let pattern = s:CreatePatternForInput(a:searchStr, a:type, a:dir)
-    call s:MoveCursor(a:count, a:dir, pattern)
-    call s:EnableHighlight(pattern)
+    let pattern = s:GetPatternFromInput(a:searchStr, a:type, a:dir, 0)
+    call s:MoveCursor(a:count, a:dir, pattern, a:shouldSaveMark)
+    call s:EnableHighlight()
 
     call s:AttachSearchToggleAutoCommands()
 endfunction
 
-function! s:MoveCursor(count, dir, pattern)
+function! s:MoveCursor(count, dir, pattern, shouldSaveMark)
 
     let cnt = a:count > 0 ? a:count : 1
 
     let options = (a:dir ==# 'f') ? 'W' : 'Wb'
 
     for i in range(cnt)
-        let lineNo = search('\V' . a:pattern, options . 'n')
+        let newPos = searchpos('\V' . a:pattern, options . 'n')
 
-        " Only add to jumplist if we're changing line
-        if lineNo != line(".")
-            normal! m`
+        if newPos == [0, 0]
+            " No match
+            continue
         endif
 
-        call search('\V' . a:pattern, options)
+        if newPos[0] != line('.') || newPos[1] != col('.')
+
+            if a:shouldSaveMark
+                normal! m`
+            endif
+
+            call setpos('.', [bufnr('%'), newPos[0], newPos[1], 0])
+        endif
     endfor
 endfunction
 
@@ -222,17 +218,29 @@ function! s:EnableHighlight(...)
     if a:0
         let pattern = a:1
     else
-        let pattern = s:CreatePatternForInput(s:lastSearch, s:lastSearchType, s:lastSearchDir)
+        let pattern = s:GetPatternFromInput(s:lastSearch, s:lastSearchType, s:lastSearchDir, 1)
     endif
 
     call s:RemoveHighlight()
     call s:AttachAutoCommands()
 
     let matchQuery = '\V' . pattern
-
     let currentLine = line('.')
+
+    let nextMatchLine = searchpos(matchQuery .'\%>' . currentLine . 'l', 'Wn')[0]
+    let prevMatchLine = searchpos(matchQuery .'\%<' . currentLine . 'l', 'bWn')[0]
+    echom prevMatchLine . " , " . nextMatchLine
+
+    if prevMatchLine == 0
+        let prevMatchLine = 1
+    endif
+
+    if nextMatchLine == 0
+        let nextMatchLine = line('$')
+    endif
+
     " Only show the matches in the above and below lines
-    let matchQuery = matchQuery .'\%>' . max([0, currentLine-2]) . 'l\%<' . (currentLine + 2) . 'l'
+    let matchQuery = matchQuery .'\%>' . max([0, prevMatchLine-1]) . 'l\%<' . (nextMatchLine+1) . 'l'
 
     let w:charHighlightId = matchadd('Search', matchQuery, 2, get(w:, 'charHighlightId', -1))
 endfunction
@@ -241,7 +249,9 @@ function! s:RepeatSearchForward(count, mode)
     if empty(s:lastSearch)
         echo 'Nothing to repeat'
     else
-        call s:RunSearch(a:count, s:lastSearch, 'f', s:lastSearchType)
+        let shouldSaveMark = (w:charHighlightId == -1)
+
+        call s:RunSearch(a:count, s:lastSearch, 'f', s:lastSearchType, shouldSaveMark)
 
         if a:mode ==# 'o'
             " Not 100% sure why this is necessary in this case but it is
@@ -254,6 +264,7 @@ function! s:RepeatSearchBackward(count)
     if empty(s:lastSearch)
         echo 'Nothing to repeat'
     else
-        call s:RunSearch(a:count, s:lastSearch, 'b', s:lastSearchType)
+        let shouldSaveMark = (w:charHighlightId == -1)
+        call s:RunSearch(a:count, s:lastSearch, 'b', s:lastSearchType, shouldSaveMark)
     endif
 endfunction
