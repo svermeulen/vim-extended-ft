@@ -146,8 +146,9 @@ endfunction
 
 function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
 
-    let bolOrNonWordChar = '\(\W\|\^\)' 
-    let eolOrNonWordChar = '\(\W\|\$\)' 
+    let nonWordChar = '\(\W\|_\)'
+    let bolOrNonWordChar = '\(' . nonWordChar . '\|\^\)' 
+    let eolOrNonWordChar = '\(' . nonWordChar . '\|\$\)' 
 
     if a:searchStr =~# '\v[a-z]'
         if a:type == 'f'
@@ -155,9 +156,9 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
         else
             if a:dir == 'f'
                 if a:forHighlight
-                    return '\C\(\W\zs' . a:searchStr . '\|\.\zs'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(a:searchStr) . '\)'
+                    return '\C\(' . nonWordChar . '\zs' . a:searchStr . '\|\.\zs'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(a:searchStr) . '\)'
                 else
-                    return '\C\(\W' . a:searchStr . '\|\.'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(a:searchStr) . '\)'
+                    return '\C\(' . nonWordChar . a:searchStr . '\|\.'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(a:searchStr) . '\)'
                 endif
             else
                 if a:forHighlight
@@ -209,6 +210,13 @@ function! s:MoveCursor(count, dir, pattern, shouldSaveMark)
             endif
 
             call setpos('.', [bufnr('%'), newPos[0], newPos[1], 0])
+
+            " This is necessary for some reason otherwise sometimes after doing f[char] and going down a line it jumps to a different column
+            if col('.') == col('$')-1
+                normal! hl
+            else
+                normal! lh
+            endif
         endif
     endfor
 endfunction
@@ -229,7 +237,6 @@ function! s:EnableHighlight(...)
 
     let nextMatchLine = searchpos(matchQuery .'\%>' . currentLine . 'l', 'Wn')[0]
     let prevMatchLine = searchpos(matchQuery .'\%<' . currentLine . 'l', 'bWn')[0]
-    echom prevMatchLine . " , " . nextMatchLine
 
     if prevMatchLine == 0
         let prevMatchLine = 1
