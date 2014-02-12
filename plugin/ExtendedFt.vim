@@ -18,36 +18,36 @@ nnoremap <plug>ExtendedFtRepeatSearchBackward :<c-u>call <sid>RepeatSearchBackwa
 nnoremap <plug>ExtendedFtRepeatSearchCenterForward :<c-u>call <sid>RepeatSearchForward(v:count, 'n')<cr>zz
 nnoremap <plug>ExtendedFtRepeatSearchCenterBackward :<c-u>call <sid>RepeatSearchBackward(v:count)<cr>zz
 
-nnoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "f")<cr>'
-nnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "f")<cr>'
-nnoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "t")<cr>'
-nnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "t")<cr>'
+nnoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "f", "n")<cr>'
+nnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "f", "n")<cr>'
+nnoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "t", "n")<cr>'
+nnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "t", "n")<cr>'
 
 xnoremap <expr> <plug>ExtendedFtVisualModeRepeatSearchForward '<esc>:<c-u>call <sid>RepeatSearchForward('. v:count . ', "x")<cr>m>gv'
 xnoremap <expr> <plug>ExtendedFtVisualModeRepeatSearchBackward '<esc>:<c-u>call <sid>RepeatSearchBackward('. v:count . ')<cr>m>gv'
 
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "t")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "t")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "t", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "t", "x")<cr>m>gv'
 
 onoremap <plug>ExtendedFtOperationModeRepeatSearchForward :call <sid>RepeatSearchForward(v:count, 'o')<cr>
 onoremap <plug>ExtendedFtOperationModeRepeatSearchBackward :call <sid>RepeatSearchBackward(v:count)<cr>
 
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "p")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchTForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchTBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "p")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "p", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchTForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchTBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "p", "o")<cr>'
 
 " Seek = search using two characters instead of just one
-nnoremap <expr> <silent> <plug>ExtendedFtSearchSForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . <sid>InputChar() . '", "f", "f")<cr>'
-nnoremap <expr> <silent> <plug>ExtendedFtSearchSBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . <sid>InputChar() . '", "b", "f")<cr>'
+nnoremap <expr> <silent> <plug>ExtendedFtSearchSForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . <sid>InputChar() . '", "f", "f", "n")<cr>'
+nnoremap <expr> <silent> <plug>ExtendedFtSearchSBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . <sid>InputChar() . '", "b", "f", "n")<cr>'
 
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchSForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "f")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchSBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchSForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchSBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
 
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "p")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "p", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f", "o")<cr>'
 
 """""""""""""""""""""""
 " Mappings
@@ -130,7 +130,8 @@ function! s:AttachAutoCommands()
     augroup END
 endfunction
 
-function! s:Search(count, char, dir, type)
+function! s:Search(count, char, dir, type, mode)
+    call Ave#Assert(a:mode ==# 'n' || a:mode ==# 'x' || a:mode ==# 'o')
 
     if a:char ==# ''
         return
@@ -142,16 +143,22 @@ function! s:Search(count, char, dir, type)
 
     call s:RunSearch(a:count, a:char, a:dir, a:type, 1)
 
+    if a:type ==# 'p' && a:mode ==# 'o'
+        " Not 100% sure why this is necessary in this case but it is
+        normal! l
+    endif
 endfunction
 
 function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
+
+    "echom 'running with ' . 'forHighlight = ' . a:forHighlight . ', dir = ' . a:dir . ', type = ' . a:type . ', searchStr = ' . a:searchStr
 
     let nonWordChar = '\(\W\|_\)'
     let bolOrNonWordChar = '\(' . nonWordChar . '\|\^\)' 
     let eolOrNonWordChar = '\(' . nonWordChar . '\|\$\)' 
 
     if a:searchStr =~# '\v[a-z]'
-        if a:type == 'f'
+        if a:type ==# 'f' || a:type ==# 'p'
             return '\C\(' . bolOrNonWordChar . '\zs' . a:searchStr . '\|'. a:searchStr . '\ze' . eolOrNonWordChar . '\|' . toupper(a:searchStr) . '\)'
         else
             if a:dir == 'f'
@@ -161,6 +168,7 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
                     return '\C\(' . nonWordChar . a:searchStr . '\|\.'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(a:searchStr) . '\)'
                 endif
             else
+                call Ave#Assert(a:dir ==# 'b')
                 if a:forHighlight
                     return '\C\(' . bolOrNonWordChar . '\zs' . a:searchStr . '\|\.\zs'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(a:searchStr) . '\)'
                 else
@@ -181,8 +189,12 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
 endfunction
 
 function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
+    call Ave#Assert(a:dir ==# 'f' || a:dir ==# 'b')
+    call Ave#Assert(a:type ==# 'f' || a:type ==# 't' || a:type ==# 'p')
 
     let pattern = s:GetPatternFromInput(a:searchStr, a:type, a:dir, 0)
+    "echom "pat = " . pattern
+
     call s:MoveCursor(a:count, a:dir, pattern, a:shouldSaveMark)
     call s:EnableHighlight()
 
