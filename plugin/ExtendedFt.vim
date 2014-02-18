@@ -268,7 +268,7 @@ function! s:RepeatSearchForward(count, mode)
     if empty(s:lastSearch)
         echo 'Nothing to repeat'
     else
-        let shouldSaveMark = (w:charHighlightId == -1)
+        let shouldSaveMark = get(w:, "charHighlightId", -1)
 
         call s:RunSearch(a:count, s:lastSearch, 'f', s:lastSearchType, shouldSaveMark)
 
