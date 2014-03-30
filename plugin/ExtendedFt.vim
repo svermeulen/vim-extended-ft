@@ -157,35 +157,40 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
     let bolOrNonWordChar = '\(' . nonWordChar . '\|\^\)' 
     let eolOrNonWordChar = '\(' . nonWordChar . '\|\$\)' 
 
-    if a:searchStr =~# '\v[a-z]'
+    if a:searchStr ==# '-'
+        " Apply smart case to key '-'
+        let searchStr = '\(-\|_\)'
+    elseif a:searchStr ==# '\'
+        let searchStr = '\\'
+    else
+        let searchStr = a:searchStr
+    endif
+
+    if searchStr =~# '\v[A-Z]'
+        return '\c' . tolower(searchStr)
+
+    else
         if a:type ==# 'f' || a:type ==# 'p'
-            return '\C\(' . bolOrNonWordChar . '\zs' . a:searchStr . '\|'. a:searchStr . '\ze' . eolOrNonWordChar . '\|' . toupper(a:searchStr) . '\)'
+            return '\C\(' . bolOrNonWordChar . '\zs' . searchStr . '\|'. searchStr . '\ze' . eolOrNonWordChar . '\|' . toupper(searchStr) . '\)'
         else
             if a:dir == 'f'
                 if a:forHighlight
-                    return '\C\(' . nonWordChar . '\zs' . a:searchStr . '\|\.\zs'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(a:searchStr) . '\)'
+                    return '\C\(' . nonWordChar . '\zs' . searchStr . '\|\.\zs'. searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(searchStr) . '\)'
                 else
-                    return '\C\(' . nonWordChar . a:searchStr . '\|\.'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(a:searchStr) . '\)'
+                    return '\C\(' . nonWordChar . searchStr . '\|\.'. searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(searchStr) . '\)'
                 endif
             else
                 call Ave#Assert(a:dir ==# 'b')
                 if a:forHighlight
-                    return '\C\(' . bolOrNonWordChar . '\zs' . a:searchStr . '\|\.\zs'. a:searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(a:searchStr) . '\)'
+                    return '\C\(' . bolOrNonWordChar . '\zs' . searchStr . '\|\.\zs'. searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(searchStr) . '\)'
                 else
-                    return '\C\(' . bolOrNonWordChar . a:searchStr . '\zs\|\.'. a:searchStr . '\zs' . eolOrNonWordChar . '\|\.' . toupper(a:searchStr) . '\zs\)'
+                    return '\C\(' . bolOrNonWordChar . searchStr . '\zs\|\.'. searchStr . '\zs' . eolOrNonWordChar . '\|\.' . toupper(searchStr) . '\zs\)'
                 endif
             endif
         endif
-
-    elseif a:searchStr =~# '\v[A-Z]'
-        return '\c' . tolower(a:searchStr)
-
-    elseif a:searchStr ==# '-'
-        " Apply smart case to key '-'
-        return '\(-\|_\)'
     endif
 
-    return a:searchStr
+    return searchStr
 endfunction
 
 function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
