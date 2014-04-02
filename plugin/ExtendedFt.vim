@@ -171,7 +171,7 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
 
     else
         if a:type ==# 'f' || a:type ==# 'p'
-            return '\C\(' . bolOrNonWordChar . '\zs' . searchStr . '\|'. searchStr . '\ze' . eolOrNonWordChar . '\|' . toupper(searchStr) . '\)'
+            return '\C\(' . searchStr . '\ze' . eolOrNonWordChar . '\|'. bolOrNonWordChar . '\zs' . searchStr . '\|' . toupper(searchStr) . '\)'
         else
             if a:dir == 'f'
                 if a:forHighlight
@@ -198,7 +198,7 @@ function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
     call Ave#Assert(a:type ==# 'f' || a:type ==# 't' || a:type ==# 'p')
 
     let pattern = s:GetPatternFromInput(a:searchStr, a:type, a:dir, 0)
-    "echom "pat = " . pattern
+    echom "pat = " . pattern
 
     call s:MoveCursor(a:count, a:dir, pattern, a:shouldSaveMark)
     call s:EnableHighlight()
