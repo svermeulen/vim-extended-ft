@@ -131,7 +131,7 @@ function! s:AttachAutoCommands()
 endfunction
 
 function! s:Search(count, char, dir, type, mode)
-    call Ave#Assert(a:mode ==# 'n' || a:mode ==# 'x' || a:mode ==# 'o')
+    AssertIsEnum a:mode, 'n', 'x', 'o'
 
     if a:char ==# ''
         return
@@ -180,7 +180,8 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
                     return '\C\(' . nonWordChar . searchStr . '\|\.'. searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(searchStr) . '\)'
                 endif
             else
-                call Ave#Assert(a:dir ==# 'b')
+                Assert a:dir ==# 'b'
+
                 if a:forHighlight
                     return '\C\(' . bolOrNonWordChar . '\zs' . searchStr . '\|\.\zs'. searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(searchStr) . '\)'
                 else
@@ -194,11 +195,10 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
 endfunction
 
 function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
-    call Ave#Assert(a:dir ==# 'f' || a:dir ==# 'b')
-    call Ave#Assert(a:type ==# 'f' || a:type ==# 't' || a:type ==# 'p')
+    AssertIsEnum a:dir, 'f', 'b'
+    AssertIsEnum a:type, 'f', 't', 'p'
 
     let pattern = s:GetPatternFromInput(a:searchStr, a:type, a:dir, 0)
-    echom "pat = " . pattern
 
     call s:MoveCursor(a:count, a:dir, pattern, a:shouldSaveMark)
     call s:EnableHighlight()
