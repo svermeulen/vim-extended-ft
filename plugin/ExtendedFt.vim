@@ -131,7 +131,7 @@ function! s:AttachAutoCommands()
 endfunction
 
 function! s:Search(count, char, dir, type, mode)
-    AssertIsEnum a:mode // 'n', 'x', 'o'
+    AssertIsOneOf a:mode // 'n', 'x', 'o'
 
     if a:char ==# ''
         return
@@ -195,8 +195,8 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
 endfunction
 
 function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
-    AssertIsEnum a:dir // 'f', 'b'
-    AssertIsEnum a:type // 'f', 't', 'p'
+    AssertIsOneOf a:dir // 'f', 'b'
+    AssertIsOneOf a:type // 'f', 't', 'p'
 
     let pattern = s:GetPatternFromInput(a:searchStr, a:type, a:dir, 0)
 
