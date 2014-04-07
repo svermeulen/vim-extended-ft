@@ -23,31 +23,31 @@ nnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':<c-u>call <sid>Search
 nnoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "t", "n")<cr>'
 nnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "t", "n")<cr>'
 
-xnoremap <expr> <plug>ExtendedFtVisualModeRepeatSearchForward '<esc>:<c-u>call <sid>RepeatSearchForward('. v:count . ', "x")<cr>m>gv'
-xnoremap <expr> <plug>ExtendedFtVisualModeRepeatSearchBackward '<esc>:<c-u>call <sid>RepeatSearchBackward('. v:count . ')<cr>m>gv'
+xnoremap <expr> <plug>ExtendedFtRepeatSearchForward '<esc>:<c-u>call <sid>RepeatSearchForward('. v:count . ', "x")<cr>m>gv'
+xnoremap <expr> <plug>ExtendedFtRepeatSearchBackward '<esc>:<c-u>call <sid>RepeatSearchBackward('. v:count . ')<cr>m>gv'
 
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f", "x")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "t", "x")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "t", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "t", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "t", "x")<cr>m>gv'
 
-onoremap <plug>ExtendedFtOperationModeRepeatSearchForward :call <sid>RepeatSearchForward(v:count, 'o')<cr>
-onoremap <plug>ExtendedFtOperationModeRepeatSearchBackward :call <sid>RepeatSearchBackward(v:count)<cr>
+onoremap <plug>ExtendedFtRepeatSearchForward :call <sid>RepeatSearchForward(v:count, 'o')<cr>
+onoremap <plug>ExtendedFtRepeatSearchBackward :call <sid>RepeatSearchBackward(v:count)<cr>
 
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "p", "o")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchFBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "o")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchTForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f", "o")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchTBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "p", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "p", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "p", "o")<cr>'
 
 " Seek = search using two characters instead of just one
 nnoremap <expr> <silent> <plug>ExtendedFtSearchSForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . <sid>InputChar() . '", "f", "f", "n")<cr>'
 nnoremap <expr> <silent> <plug>ExtendedFtSearchSBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . <sid>InputChar() . '", "b", "f", "n")<cr>'
 
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchSForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "f", "x")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtVisualModeSearchSBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchSForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchSBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
 
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "p", "o")<cr>'
-onoremap <expr> <silent> <plug>ExtendedFtOperationModeSearchSBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtSearchSForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "f", "p", "o")<cr>'
+onoremap <expr> <silent> <plug>ExtendedFtSearchSBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . <sid>InputChar() . '", "b", "f", "o")<cr>'
 
 """""""""""""""""""""""
 " Mappings
@@ -60,28 +60,28 @@ if !exists('g:ExtendedFTUseDefaults') || g:ExtendedFTUseDefaults
     nmap <silent> t <plug>ExtendedFtSearchTForward
     nmap <silent> T <plug>ExtendedFtSearchTBackward
 
-    xmap <silent> ; <plug>ExtendedFtVisualModeRepeatSearchForward
-    xmap <silent> , <plug>ExtendedFtVisualModeRepeatSearchBackward
-    xmap <silent> f <plug>ExtendedFtVisualModeSearchFForward
-    xmap <silent> F <plug>ExtendedFtVisualModeSearchFBackward
-    xmap <silent> t <plug>ExtendedFtVisualModeSearchTForward
-    xmap <silent> T <plug>ExtendedFtVisualModeSearchTBackward
+    xmap <silent> ; <plug>ExtendedFtRepeatSearchForward
+    xmap <silent> , <plug>ExtendedFtRepeatSearchBackward
+    xmap <silent> f <plug>ExtendedFtSearchFForward
+    xmap <silent> F <plug>ExtendedFtSearchFBackward
+    xmap <silent> t <plug>ExtendedFtSearchTForward
+    xmap <silent> T <plug>ExtendedFtSearchTBackward
 
-    omap <silent> ; <plug>ExtendedFtOperationModeRepeatSearchForward
-    omap <silent> , <plug>ExtendedFtOperationModeRepeatSearchBackward
-    omap <silent> f <plug>ExtendedFtOperationModeSearchFForward
-    omap <silent> F <plug>ExtendedFtOperationModeSearchFBackward
-    omap <silent> t <plug>ExtendedFtOperationModeSearchTForward
-    omap <silent> T <plug>ExtendedFtOperationModeSearchTBackward
+    omap <silent> ; <plug>ExtendedFtRepeatSearchForward
+    omap <silent> , <plug>ExtendedFtRepeatSearchBackward
+    omap <silent> f <plug>ExtendedFtSearchFForward
+    omap <silent> F <plug>ExtendedFtSearchFBackward
+    omap <silent> t <plug>ExtendedFtSearchTForward
+    omap <silent> T <plug>ExtendedFtSearchTBackward
 
     " Uncomment or copy/paste to your own vimrc to use seek operator
     "nmap <silent> s <plug>ExtendedFtSearchSForward
-    "xmap <silent> s <plug>ExtendedFtVisualModeSearchSForward
-    "omap <silent> s <plug>ExtendedFtOperationModeSearchSForward
+    "xmap <silent> s <plug>ExtendedFtSearchSForward
+    "omap <silent> s <plug>ExtendedFtSearchSForward
 
     "nmap <silent> S <plug>ExtendedFtSearchSBackward
-    "xmap <silent> S <plug>ExtendedFtVisualModeSearchSBackward
-    "omap <silent> S <plug>ExtendedFtOperationModeSearchSBackward
+    "xmap <silent> S <plug>ExtendedFtSearchSBackward
+    "omap <silent> S <plug>ExtendedFtSearchSBackward
 endif
 
 """""""""""""""""""""""
