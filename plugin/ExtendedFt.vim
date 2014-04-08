@@ -131,7 +131,7 @@ function! s:AttachAutoCommands()
 endfunction
 
 function! s:Search(count, char, dir, type, mode)
-    AssertIsOneOf a:mode // 'n', 'x', 'o'
+    exec AssertIsOneOf(a:mode, 'n', 'x', 'o')
 
     if a:char ==# ''
         return
@@ -195,8 +195,8 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
 endfunction
 
 function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
-    AssertIsOneOf a:dir // 'f', 'b'
-    AssertIsOneOf a:type // 'f', 't', 'p'
+    exec AssertIsOneOf(a:dir, 'f', 'b')
+    exec AssertIsOneOf(a:type, 'f', 't', 'p')
 
     let pattern = s:GetPatternFromInput(a:searchStr, a:type, a:dir, 0)
 
