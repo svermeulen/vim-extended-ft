@@ -180,7 +180,7 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
                     return '\C\(' . nonWordChar . searchStr . '\|\.'. searchStr . '\ze' . eolOrNonWordChar . '\|\.' . toupper(searchStr) . '\)'
                 endif
             else
-                Assert a:dir ==# 'b'
+                exec Assert(a:dir ==# 'b')
 
                 if a:forHighlight
                     return '\C\(' . bolOrNonWordChar . '\zs' . searchStr . '\|\.\zs'. searchStr . '\ze' . eolOrNonWordChar . '\|\.\zs' . toupper(searchStr) . '\)'
