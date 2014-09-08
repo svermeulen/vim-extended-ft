@@ -101,11 +101,11 @@ function! s:InputChar()
     let charNr = getchar()
 
     if charNr ==# '€F7'
-        return '('
+        return 'bracketOpen'
     endif
 
     if charNr ==# '€F8'
-        return ')'
+        return 'bracketClose'
     endif
 
     let char = nr2char(charNr)
@@ -162,6 +162,12 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
         let searchStr = '\(-\|_\)'
     elseif a:searchStr ==# '\'
         let searchStr = '\\'
+
+    elseif a:searchStr ==# 'bracketOpen'
+        let searchStr = '\((\|[\|''\|"\|<\)'
+
+    elseif a:searchStr ==# 'bracketClose'
+        let searchStr = '\()\|]\|''\|"\|>\)'
     else
         let searchStr = a:searchStr
     endif
