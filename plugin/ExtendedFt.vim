@@ -160,14 +160,18 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
     if a:searchStr ==# '-'
         " Apply smart case to key '-'
         let searchStr = '\(-\|_\)'
+
     elseif a:searchStr ==# '\'
         let searchStr = '\\'
 
     elseif a:searchStr ==# 'bracketOpen'
-        let searchStr = '\((\|[\|''\|"\|<\)'
+        let searchStr = '\((\|[\|<\|{\)'
+
+    elseif a:searchStr ==# "'"
+        let searchStr = '\(''\|"\)'
 
     elseif a:searchStr ==# 'bracketClose'
-        let searchStr = '\()\|]\|''\|"\|>\)'
+        let searchStr = '\()\|]\|>\|}\)'
     else
         let searchStr = a:searchStr
     endif
