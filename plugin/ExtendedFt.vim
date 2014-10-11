@@ -230,6 +230,10 @@ function! s:MoveCursor(count, dir, pattern, shouldSaveMark)
             continue
         endif
 
+        if newPos[0] > line("w$") - &scrolloff
+            break
+        endif
+
         if newPos[0] != line('.') || newPos[1] != col('.')
 
             if a:shouldSaveMark
