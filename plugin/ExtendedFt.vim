@@ -231,6 +231,12 @@ function! s:MoveCursor(count, dir, pattern, shouldSaveMark, mode)
             continue
         endif
 
+        let minLine = line("w0") + &scrolloff
+
+        if newPos[0] < minLine
+            break
+        endif
+
         if line("$") - line("w$") < &scrolloff
             " Need to ignore &scrolloff when at the bottom of the file
             let maxLine = line("$")
