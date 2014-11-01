@@ -13,10 +13,10 @@ let s:lastSearchDir = 'f'
 nnoremap <plug>ExtendedFtForceEnableHighlight :call <sid>EnableHighlight()<cr>
 
 nnoremap <plug>ExtendedFtRepeatSearchForward :<c-u>call <sid>RepeatSearchForward(v:count, 'n')<cr>
-nnoremap <plug>ExtendedFtRepeatSearchBackward :<c-u>call <sid>RepeatSearchBackward(v:count)<cr>
+nnoremap <plug>ExtendedFtRepeatSearchBackward :<c-u>call <sid>RepeatSearchBackward(v:count, 'n')<cr>
 
 nnoremap <plug>ExtendedFtRepeatSearchCenterForward :<c-u>call <sid>RepeatSearchForward(v:count, 'n')<cr>zz
-nnoremap <plug>ExtendedFtRepeatSearchCenterBackward :<c-u>call <sid>RepeatSearchBackward(v:count)<cr>zz
+nnoremap <plug>ExtendedFtRepeatSearchCenterBackward :<c-u>call <sid>RepeatSearchBackward(v:count, 'n')<cr>zz
 
 nnoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "f", "f", "n")<cr>'
 nnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "f", "n")<cr>'
@@ -24,15 +24,15 @@ nnoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':<c-u>call <sid>Search(
 nnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "' . <sid>InputChar() . '", "b", "t", "n")<cr>'
 
 xnoremap <expr> <plug>ExtendedFtRepeatSearchForward '<esc>:<c-u>call <sid>RepeatSearchForward('. v:count . ', "x")<cr>m>gv'
-xnoremap <expr> <plug>ExtendedFtRepeatSearchBackward '<esc>:<c-u>call <sid>RepeatSearchBackward('. v:count . ')<cr>m>gv'
+xnoremap <expr> <plug>ExtendedFtRepeatSearchBackward '<esc>:<c-u>call <sid>RepeatSearchBackward('. v:count . ', "x")<cr>m>gv'
 
 xnoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "f", "x")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchFBackward '<esc>:<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "x")<cr>m>gv'
 xnoremap <expr> <silent> <plug>ExtendedFtSearchTForward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "t", "x")<cr>m>gv'
-xnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward ':<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "t", "x")<cr>m>gv'
+xnoremap <expr> <silent> <plug>ExtendedFtSearchTBackward '<esc>:<c-u>call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "t", "x")<cr>m>gv'
 
 onoremap <plug>ExtendedFtRepeatSearchForward :call <sid>RepeatSearchForward(v:count, 'o')<cr>
-onoremap <plug>ExtendedFtRepeatSearchBackward :call <sid>RepeatSearchBackward(v:count)<cr>
+onoremap <plug>ExtendedFtRepeatSearchBackward :call <sid>RepeatSearchBackward(v:count, 'o')<cr>
 
 onoremap <expr> <silent> <plug>ExtendedFtSearchFForward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "f", "p", "o")<cr>'
 onoremap <expr> <silent> <plug>ExtendedFtSearchFBackward ':call <sid>Search('. v:count . ', "'. <sid>InputChar() . '", "b", "f", "o")<cr>'
@@ -141,7 +141,7 @@ function! s:Search(count, char, dir, type, mode)
     let s:lastSearchType = a:type
     let s:lastSearchDir = a:dir
 
-    call s:RunSearch(a:count, a:char, a:dir, a:type, 1)
+    call s:RunSearch(a:count, a:char, a:dir, a:type, 1, a:mode)
 
     if a:type ==# 'p' && a:mode ==# 'o'
         " Not 100% sure why this is necessary in this case but it is
@@ -204,19 +204,20 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
     return searchStr
 endfunction
 
-function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark)
+function! s:RunSearch(count, searchStr, dir, type, shouldSaveMark, mode)
+
     exec AssertIsOneOf(a:dir, 'f', 'b')
     exec AssertIsOneOf(a:type, 'f', 't', 'p')
 
     let pattern = s:GetPatternFromInput(a:searchStr, a:type, a:dir, 0)
 
-    call s:MoveCursor(a:count, a:dir, pattern, a:shouldSaveMark)
+    call s:MoveCursor(a:count, a:dir, pattern, a:shouldSaveMark, a:mode)
     call s:EnableHighlight()
 
     call s:AttachSearchToggleAutoCommands()
 endfunction
 
-function! s:MoveCursor(count, dir, pattern, shouldSaveMark)
+function! s:MoveCursor(count, dir, pattern, shouldSaveMark, mode)
 
     let cnt = a:count > 0 ? a:count : 1
 
@@ -295,8 +296,7 @@ function! s:RepeatSearchForward(count, mode)
         echo 'Nothing to repeat'
     else
         let shouldSaveMark = get(w:, "charHighlightId", -1)
-
-        call s:RunSearch(a:count, s:lastSearch, 'f', s:lastSearchType, shouldSaveMark)
+        call s:RunSearch(a:count, s:lastSearch, 'f', s:lastSearchType, shouldSaveMark, a:mode)
 
         if a:mode ==# 'o'
             " Not 100% sure why this is necessary in this case but it is
@@ -305,11 +305,11 @@ function! s:RepeatSearchForward(count, mode)
     endif
 endfunction
 
-function! s:RepeatSearchBackward(count)
+function! s:RepeatSearchBackward(count, mode)
     if empty(s:lastSearch)
         echo 'Nothing to repeat'
     else
         let shouldSaveMark = (w:charHighlightId == -1)
-        call s:RunSearch(a:count, s:lastSearch, 'b', s:lastSearchType, shouldSaveMark)
+        call s:RunSearch(a:count, s:lastSearch, 'b', s:lastSearchType, shouldSaveMark, a:mode)
     endif
 endfunction
