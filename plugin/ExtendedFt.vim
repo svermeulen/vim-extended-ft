@@ -233,7 +233,7 @@ function! s:MoveCursor(count, dir, pattern, shouldSaveMark, mode)
 
         let minLine = line("w0") + &scrolloff
 
-        if newPos[0] < minLine
+        if line("w0") > 1 && newPos[0] < minLine
             break
         endif
 
