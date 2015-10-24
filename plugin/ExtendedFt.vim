@@ -165,15 +165,15 @@ function! s:GetPatternFromInput(searchStr, type, dir, forHighlight)
         let searchStr = '\\'
 
     elseif a:searchStr ==# 'bracketOpen'
-        "let searchStr = '\((\|[\|<\|{\)'
-        let searchStr = '\((\)'
+        let searchStr = '\((\|[\|<\|{\)'
+        "let searchStr = '\((\)'
 
     elseif a:searchStr ==# "'"
         let searchStr = '\(''\|"\)'
 
     elseif a:searchStr ==# 'bracketClose'
-        "let searchStr = '\()\|]\|>\|}\)'
-        let searchStr = '\()\)'
+        let searchStr = '\()\|]\|>\|}\)'
+        "let searchStr = '\()\)'
     else
         let searchStr = a:searchStr
     endif
