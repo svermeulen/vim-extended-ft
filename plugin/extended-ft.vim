@@ -117,7 +117,7 @@ function! s:RunSearch(count, searchStr, dir, type)
         let matchQuery = matchQuery .'\%'.currentLine.'l'
     endif
 
-    let w:highlightId = matchadd('Search', matchQuery, 2, get(w:, 'highlightId', -1))
+    let w:highlightId = matchadd('ExtSearch', matchQuery, 2, get(w:, 'highlightId', -1))
 endfunction
 
 function! s:RepeatSearchForward(count, mode)
