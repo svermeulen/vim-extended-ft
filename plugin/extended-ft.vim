@@ -82,16 +82,25 @@ function! s:RunSearch(count, searchStr, dir, type)
 
     let options = (a:dir ==# 'f') ? 'W' : 'Wb'
 
-    let pattern = caseOption . a:searchStr
+    if a:searchStr ==# '.'
+        let hlString = '\.'
+    else
+        let hlString = a:searchStr
+    endif
+    let hlpattern = caseOption . hlString
+    let pattern   = caseOption . a:searchStr
 
     if a:type ==# 't'
         if a:dir ==# 'f'
-            let pattern = '\.' . pattern
+            let hlpattern = '\.' . hlString
+            let pattern   = '\.' . pattern
         else
-            let pattern = pattern . '\zs'
+            let hlpattern = hlpattern . '\zs'
+            let pattern   = pattern . '\zs'
         endif
     elseif a:type ==# 'p'
-        let pattern = pattern . '\zs'
+        let hlpattern = hlpattern . '\zs'
+        let pattern   = pattern . '\zs'
     endif
 
     let cnt = a:count > 0 ? a:count : 1
@@ -110,14 +119,14 @@ function! s:RunSearch(count, searchStr, dir, type)
     call s:RemoveHighlight()
     call s:AttachAutoCommands()
 
-    let matchQuery = pattern
+    let matchQuery = hlpattern
 
     if len(a:searchStr) == 1
         let currentLine = line('.')
         let matchQuery = matchQuery .'\%'.currentLine.'l'
     endif
 
-    let w:highlightId = matchadd('Search', matchQuery, 2, get(w:, 'highlightId', -1))
+    let w:highlightId = matchadd('ExtSearch', matchQuery, 2, get(w:, 'highlightId', -1))
 endfunction
 
 function! s:RepeatSearchForward(count, mode)
